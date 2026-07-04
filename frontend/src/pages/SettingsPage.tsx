@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useStore } from '../store/useStore';
 import GlassCard from '../components/common/GlassCard';
 import { Play, Pause, Square, Sun, Moon, Server, User, Cpu, ShieldCheck } from 'lucide-react';
+import { buildApiUrl } from '../config/api';
 
 export const SettingsPage: React.FC = () => {
   const store = useStore();
@@ -17,7 +18,7 @@ export const SettingsPage: React.FC = () => {
   const fetchAIConfig = async () => {
     setFetchLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/settings/ai', {
+      const response = await fetch(buildApiUrl('/api/settings/ai'), {
         headers: {
           'Authorization': `Bearer ${store.token}`,
         },
@@ -46,7 +47,7 @@ export const SettingsPage: React.FC = () => {
     e.preventDefault();
     setSaveLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/settings/ai', {
+      const response = await fetch(buildApiUrl('/api/settings/ai'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +77,7 @@ export const SettingsPage: React.FC = () => {
 
   const handleSimAction = async (action: 'start' | 'pause' | 'stop' | 'resume') => {
     try {
-      const response = await fetch(`http://localhost:8000/api/simulate/${action}`, {
+      const response = await fetch(buildApiUrl(`/api/simulate/${action}`), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${store.token}`,

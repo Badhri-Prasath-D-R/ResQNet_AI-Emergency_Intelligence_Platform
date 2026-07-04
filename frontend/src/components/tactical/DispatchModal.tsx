@@ -3,6 +3,7 @@ import { useStore } from '../../store/useStore';
 import type { Incident } from '../../store/useStore';
 import { X, Send, AlertTriangle } from 'lucide-react';
 import GlassCard from '../common/GlassCard';
+import { buildApiUrl } from '../../config/api';
 
 interface DispatchModalProps {
   incident: Incident;
@@ -36,7 +37,7 @@ export const DispatchModal: React.FC<DispatchModalProps> = ({ incident, onClose 
     setErrorMsg('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/dispatch', {
+      const response = await fetch(buildApiUrl('/api/dispatch'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,11 +65,11 @@ export const DispatchModal: React.FC<DispatchModalProps> = ({ incident, onClose 
       );
 
       // Re-fetch updated lists
-      const incRes = await fetch('http://localhost:8000/api/incidents');
+      const incRes = await fetch(buildApiUrl('/api/incidents'));
       const incJson = await incRes.json();
       if (incJson.success) setIncidents(incJson.data);
 
-      const resRes = await fetch('http://localhost:8000/api/resources');
+      const resRes = await fetch(buildApiUrl('/api/resources'));
       const resJsonList = await resRes.json();
       if (resJsonList.success) setResources(resJsonList.data);
 

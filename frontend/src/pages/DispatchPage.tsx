@@ -3,6 +3,7 @@ import { useStore } from '../store/useStore';
 import { ArrowLeft, Send, AlertTriangle, ShieldCheck, MapPin, Users, HeartPulse, Sparkles } from 'lucide-react';
 import GlassCard from '../components/common/GlassCard';
 import { AIExplainabilityPanel } from '../components/tactical/AIExplainabilityPanel';
+import { buildApiUrl } from '../config/api';
 
 export const DispatchPage: React.FC = () => {
   const { 
@@ -64,7 +65,7 @@ export const DispatchPage: React.FC = () => {
     setErrorMsg('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/dispatch', {
+      const response = await fetch(buildApiUrl('/api/dispatch'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,11 +93,11 @@ export const DispatchPage: React.FC = () => {
       );
 
       // Re-fetch updated lists
-      const incRes = await fetch('http://localhost:8000/api/incidents');
+      const incRes = await fetch(buildApiUrl('/api/incidents'));
       const incJson = await incRes.json();
       if (incJson.success) setIncidents(incJson.data);
 
-      const resRes = await fetch('http://localhost:8000/api/resources');
+      const resRes = await fetch(buildApiUrl('/api/resources'));
       const resJsonList = await resRes.json();
       if (resJsonList.success) setResources(resJsonList.data);
 

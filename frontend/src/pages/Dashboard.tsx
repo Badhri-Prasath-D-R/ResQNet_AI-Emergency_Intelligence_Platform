@@ -14,6 +14,7 @@ import {
   ShieldAlert
 } from 'lucide-react';
 import GlassCard from '../components/common/GlassCard';
+import { buildApiUrl, buildWsUrl } from '../config/api';
 
 export const Dashboard: React.FC = () => {
   const store = useStore();
@@ -28,27 +29,27 @@ export const Dashboard: React.FC = () => {
   // Fetch initial data
   const fetchData = async () => {
     try {
-      const incRes = await fetch('http://localhost:8000/api/incidents');
+      const incRes = await fetch(buildApiUrl('/api/incidents'));
       const incJson = await incRes.json();
       if (incJson.success) store.setIncidents(incJson.data);
 
-      const resRes = await fetch('http://localhost:8000/api/resources');
+      const resRes = await fetch(buildApiUrl('/api/resources'));
       const resJson = await resRes.json();
       if (resJson.success) store.setResources(resJson.data);
 
-      const shRes = await fetch('http://localhost:8000/api/shelters');
+      const shRes = await fetch(buildApiUrl('/api/shelters'));
       const shJson = await shRes.json();
       if (shJson.success) store.setShelters(shJson.data);
 
-      const stRes = await fetch('http://localhost:8000/api/stations');
+      const stRes = await fetch(buildApiUrl('/api/stations'));
       const stJson = await stRes.json();
       if (stJson.success) store.setStations(stJson.data);
 
-      const kpiRes = await fetch('http://localhost:8000/api/dashboard');
+      const kpiRes = await fetch(buildApiUrl('/api/dashboard'));
       const kpiJson = await kpiRes.json();
       if (kpiJson.success) store.setKPIs(kpiJson.data);
 
-      const dRes = await fetch('http://localhost:8000/api/dispatch/history');
+      const dRes = await fetch(buildApiUrl('/api/dispatch/history'));
       const dJson = await dRes.json();
       if (dJson.success) store.setDispatchHistory(dJson.data);
 
@@ -61,7 +62,7 @@ export const Dashboard: React.FC = () => {
     fetchData();
 
     // Setup WebSockets
-    const ws = new WebSocket('ws://localhost:8000/ws');
+    const ws = new WebSocket(buildWsUrl('/ws'));
     
     ws.onopen = () => {
       console.log('WebSocket channel established.');
@@ -110,7 +111,7 @@ export const Dashboard: React.FC = () => {
     setReportError('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/report', {
+      const response = await fetch(buildApiUrl('/api/report'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

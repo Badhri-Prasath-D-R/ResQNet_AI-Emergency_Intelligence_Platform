@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { KeyRound, ShieldAlert, User } from 'lucide-react';
 import GlassCard from '../components/common/GlassCard';
+import { buildApiUrl } from '../config/api';
 
 export const Login: React.FC = () => {
   const { login } = useStore();
@@ -16,7 +17,7 @@ export const Login: React.FC = () => {
     setErrorMsg('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/auth/login', {
+      const response = await fetch(buildApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
