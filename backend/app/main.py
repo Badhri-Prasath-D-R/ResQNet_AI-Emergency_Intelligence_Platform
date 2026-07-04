@@ -29,18 +29,24 @@ app = FastAPI(
 )
 
 # CORS configuration
-allowed_origins = [
-    os.environ["FRONTEND_URL"],
+allowed_origins = {
+    settings.FRONTEND_URL,
+    "https://resqnet-ai-platform-rho.vercel.app",
+    "https://resqnet-ai-platform-git-main-badhri-prasath-d-rs-projects.vercel.app",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-]
+}
+allowed_origins = [origin for origin in allowed_origins if origin]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=600,
 )
 
 # Include core routes
