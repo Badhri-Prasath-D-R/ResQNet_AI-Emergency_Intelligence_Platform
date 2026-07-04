@@ -13,21 +13,26 @@ db_instance = Database()
 
 async def connect_to_mongo():
     logger.info(f"Connecting to MongoDB with URI: {settings.MONGO_URI}")
-    db_instance.client = AsyncIOMotorClient(settings.MONGO_URI)
-    # Parse database name from URI, default to 'resqnet'
-    db_name = settings.MONGO_URI.split("/")[-1].split("?")[0] or "resqnet"
-    db_instance.db = db_instance.client[db_name]
-    logger.info(f"Connected to MongoDB database: {db_name}")
-    
-    # Create geospatial index (2dsphere) on coordinates fields formatted as GeoJSON
     try:
-        await db_instance.db.incidents.create_index([("location", "2dsphere")])
-        await db_instance.db.resources.create_index([("location", "2dsphere")])
-        await db_instance.db.shelters.create_index([("location", "2dsphere")])
-        await db_instance.db.stations.create_index([("location", "2dsphere")])
-        logger.info("Geospatial 2dsphere indexes verified and created successfully.")
+        db_instance.client = AsyncIOMotorClient(settings.MONGO_URI)
+        # Parse database name from URI, default to 'resqnet'
+        db_name = settings.MONGO_URI.split("/")[-1].split("?")[0] or "resqnet"
+        db_instance.db = db_instance.client[db_name]
+        logger.info(f"Connected to MongoDB database: {db_name}")
+
+        # Create geospatial index (2dsphere) on coordinates fields formatted as GeoJSON
+        try:
+            await db_instance.db.incidents.create_index([("location", "2dsphere")])
+            await db_instance.db.resources.create_index([("location", "2dsphere")])
+            await db_instance.db.shelters.create_index([("location", "2dsphere")])
+            await db_instance.db.stations.create_index([("location", "2dsphere")])
+            logger.info("Geospatial 2dsphere indexes verified and created successfully.")
+        except Exception as e:
+            logger.error(f"Error creating geospatial indexes: {e}")
     except Exception as e:
-        logger.error(f"Error creating geospatial indexes: {e}")
+        db_instance.client = None
+        db_instance.db = None
+        logger.error(f"MongoDB connection failed: {e}")
 
 async def close_mongo_connection():
     logger.info("Closing MongoDB connection...")

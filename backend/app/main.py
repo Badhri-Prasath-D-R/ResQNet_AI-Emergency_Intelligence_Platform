@@ -7,7 +7,9 @@ from app.core.database import connect_to_mongo, close_mongo_connection
 from app.api.v1.router import router as api_v1_router
 from app.services.websocket_manager import manager
 from app.services.simulation_service import simulation_engine
-
+import os
+import dotenv
+dotenv.load_dotenv()
 logger = logging.getLogger("resqnet")
 
 @asynccontextmanager
@@ -28,7 +30,7 @@ app = FastAPI(
 
 # CORS configuration
 allowed_origins = [
-    settings.FRONTEND_URL,
+    os.environ["FRONTEND_URL"],
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
@@ -36,7 +38,6 @@ allowed_origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
