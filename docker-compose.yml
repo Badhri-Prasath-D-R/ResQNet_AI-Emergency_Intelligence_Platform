@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  database:
+    image: mongo:6.0
+    container_name: resqnet_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build: ./backend
+    container_name: resqnet_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://database:27017/resqnet
+    depends_on:
+      - database
+
+  frontend:
+    build: ./frontend
+    container_name: resqnet_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:
