@@ -19,8 +19,7 @@ ResQNet AI utilizes a decoupled reactive architecture:
 - **Python** 3.10+
 - **Node.js** 18+ & **npm**
 - **MongoDB** (Local instance or MongoDB Atlas Connection URI)
-- **LM Studio** (configured with the `google/gemma-4-e4b` model)
-
+- 
 ---
 
 ## Local Setup Instructions
